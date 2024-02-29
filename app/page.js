@@ -93,7 +93,7 @@ const ProgressionBar = forwardRef(function ProgressionBar(props, ref) {
 });
 
 export default function Home() {
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished, setIsFinished] = useState(true);
   const [isTimeout, setIsTimeout] = useState(false);
   const [winCount, setWinCount] = useState(0);
   const [listBox, setListBox] = useState([
@@ -166,7 +166,7 @@ export default function Home() {
           >
             <h1 className="text-white text-3xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
-              {isTimeout
+              {winCount == 0 ? "Selamat Datang di puzzle" : isTimeout
                 ? "Waduh waktu kamu habis ! "
                 : "Selamat kamu berhasil menyelesaikan puzzle !"}
             </h1>
@@ -179,7 +179,7 @@ export default function Home() {
                   : "border-red-100 bg-red-500 hover:bg-red-700")
               }
             >
-              Retry!
+              {winCount == 0 ? "Mulai!": "Retry!"}
             </button>
             <h1 className="text-white text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
