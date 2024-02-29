@@ -97,7 +97,7 @@ export default function Home() {
   const [isTimeout, setIsTimeout] = useState(false);
   const [winCount, setWinCount] = useState(0);
   const [listBox, setListBox] = useState([
-    ...listBoxGenerator((winCount + 2) * 3, (winCount % 5) + 3),
+    ...listBoxGenerator((parseInt(winCount / 5) + 3) * 3, (winCount % 5) + 3),
   ]);
 
   const progressionBarRef = useRef(null);
@@ -109,7 +109,7 @@ export default function Home() {
       setWinCount((prevValue) => prevValue + 1);
     }
 
-    setListBox([...listBoxGenerator((winCount + 2) * 3, (winCount % 5) + 3)]);
+    setListBox([...listBoxGenerator((parseInt(winCount / 5) + 3) * 3, (winCount % 5) + 3)]);
     progressionBarRef.current.refreshPercent();
     setIsFinished(false);
     setIsTimeout(false);
