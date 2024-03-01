@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import path from "path";
 let db;
 try {
-  db = new JsonDB( "/local.db");
 } catch (e) {
   console.log(e);
 }
@@ -18,6 +17,7 @@ export async function POST(request) {
 
 const getHighScore = async () => {
   try {
+    const db = new JsonDB(process.cwd() + "/tmp/local.db");
     return NextResponse.json({ score: db.get("high_score") }, { status: 200 });
   } catch (e) {
     console.log(e);
@@ -27,6 +27,7 @@ const getHighScore = async () => {
 
 const updateHighScore = async (req) => {
   try {
+    const db = new JsonDB(process.cwd() + "/tmp/local.db");
     const { high_score } = await req.json();
     if (high_score >= 1000000) {
       return NextResponse.json("Hayoloh ngecheat", { status: 500 });
