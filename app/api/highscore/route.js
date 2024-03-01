@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 let db;
 try {
-  db = new JsonDB( "./app/local.db");
+  db = new JsonDB( "/local.db");
 } catch (e) {
   console.log(e);
 }
