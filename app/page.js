@@ -14,12 +14,11 @@ let ignore = false;
 let intervalTime;
 
 const listBoxGenerator = (winCount) => {
- 
-  const level = parseInt(winCount / 5)
-  const stack = level + 2
+  const level = parseInt(winCount / 5);
+  const stack = level + 2;
   const maxBox = Math.pow(stack, 2);
-  const minimumTrue = 3
-  const maxTrue = maxBox - level - 3
+  const minimumTrue = 3;
+  const maxTrue = maxBox - level - 3;
   const maximumTrue = (winCount % maxTrue) + minimumTrue;
 
   let isClickedArr = Array(maximumTrue).fill(true);
@@ -110,17 +109,15 @@ export default function Home() {
   const [listBox, setListBox] = useState([...listBoxGenerator(winCount)]);
 
   const progressionBarRef = useRef(null);
-
+  const audioClickRef  = useRef(null);
+  const backgroudaAudioRef = useRef(null);
+  const gridRef = useRef(null);
   const handleButtonModalClick = () => {
     if (isTimeout) {
-      setGridClass('grid min-h-screen grid-cols-2 items-center gap-4 p-6')
       setWinCount(0);
     } else {
-      setGridClass(`grid min-h-screen grid-cols-${parseInt(winCount / 5) + 2}`);
       setWinCount((prevValue) => prevValue + 1);
     }
-
-    setListBox([...listBoxGenerator(winCount)]);
     progressionBarRef.current.refreshPercent();
     setIsFinished(false);
     setIsTimeout(false);
@@ -129,13 +126,25 @@ export default function Home() {
 
   const handleBoxClick = (box) => {
     if (box.isClicked) {
+      audioClickRef.current.play();
       const tempList = listBox;
       tempList[box.index].isClicked = false;
       setListBox([...tempList]);
     }
   };
 
+  useEffect(()=>{
+    if (isTimeout) {
+      gridRef.current.style['grid-template-columns'] = "repeat(2, minmax(0, 1fr))"
+    } else {
+      gridRef.current.style['grid-template-columns'] = `repeat(${parseInt(winCount / 5) + 2}, minmax(0, 1fr))`
+    }
+    setListBox([...listBoxGenerator(winCount)]);
+
+  },[winCount])
+
   useEffect(() => {
+    backgroudaAudioRef.current.play();
     const filtered = listBox.filter((val) => val.isClicked);
     if (filtered.length == 0) {
       setIsFinished(true);
@@ -144,6 +153,12 @@ export default function Home() {
 
   return (
     <main className="h-full relative">
+      <audio loop ref={backgroudaAudioRef} src="./music_zapsplat_easy_cheesy.mp3" type="audio/mpeg">
+        <source  />
+      </audio>
+      <audio ref={audioClickRef} src="./click.mp3" type="audio/mpeg">
+        <source  />
+      </audio>
       <div className="absolute z-0 w-full">
         <div className="absolute z-0 w-full">
           <ProgressionBar
@@ -154,7 +169,7 @@ export default function Home() {
           />
         </div>
 
-        <div className={gridClass}>
+        <div ref={gridRef} className={gridClass}>
           {listBox.map((val) => {
             return (
               <Box
