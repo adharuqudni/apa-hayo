@@ -1,7 +1,7 @@
 
 import JsonDB from "@/helper/jsonDB";
 import { NextResponse } from "next/server";
-const db  = new JsonDB('./local.db');
+const db  = new JsonDB('./tmp/local.db');
 
 export const dynamic = 'force-dynamic' // defaults to auto
 export async function GET() {
