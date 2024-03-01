@@ -6,7 +6,7 @@ export default class JsonDB {
         try {
             fs.readFileSync(this.filename);
         } catch (err) {
-            fs.writeFileSync(this.filename, '{}');
+            fs.writeFileSync(this.filename, '{high_score: 0}');
         }
     }
 
