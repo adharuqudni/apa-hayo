@@ -35,8 +35,6 @@ const updateHighScore = async (score) => {
   }
 };
 
-
-
 const listBoxGenerator = (winCount) => {
   const level = parseInt(winCount / 5);
   const stack = level + 2;
@@ -136,6 +134,7 @@ export default function Home() {
   const [isFinished, setIsFinished] = useState(false);
   const [isStart, setIsStart] = useState(true);
   const [isTimeout, setIsTimeout] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [winCount, setWinCount] = useState(0);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -160,6 +159,7 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const prev_high_score = await getHighScore();
       if (prev_high_score.score < score) {
         const high_score = await updateHighScore(score);
@@ -167,8 +167,10 @@ export default function Home() {
       }
       setWinCount(0);
       setScore(0);
+      setIsLoading(false)
     }
     if (isTimeout) {
+      
       fetchData();
     }
   }, [isTimeout]);
@@ -211,12 +213,14 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true)
       const high_score = await getHighScore();
       setHighScore(high_score.score);
       const filtered = listBox.filter((val) => val.isClicked);
       if (filtered.length == 0) {
         setIsFinished(true);
       }
+      setIsLoading(false);
     }
     fetchData();
   }, [listBox]);
@@ -274,17 +278,21 @@ export default function Home() {
             <h1 className="text-white text-l drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               Cara Bermain: Tekan warna kuning secepat mungkin
             </h1>
-            <button
-              onClick={handleButtonModalClick}
-              className={
-                "text-white font-bold py-2 px-4 border rounded " +
-                ((isFinished && !isTimeout) || isStart
-                  ? " border-green-100 bg-green-500 hover:bg-green-700"
-                  : "border-red-100 bg-red-500 hover:bg-red-700")
-              }
-            >
-              {winCount == 0 ? "Mulai!" : "Next Level"}
-            </button>
+            {(
+              <button
+                onClick={handleButtonModalClick}
+                disabled={isLoading}
+                className={
+                  "text-white font-bold py-2 px-4 border rounded " +
+                  (!isLoading? (isFinished && !isTimeout) || isStart
+                    ? " border-green-100 bg-green-500 hover:bg-green-700"
+                    :  "border-red-100 bg-red-500 hover:bg-red-700" : "border-slate-100 bg-slate-200 ")
+                }
+              >
+                {winCount == 0 ? "Mulai!" : "Next Level"}
+              </button>
+            )}
+
             <h1 className="text-white text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
               Total Score Kamu : {score}
