@@ -160,11 +160,11 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      // const prev_high_score = await getHighScore();
-      // if (prev_high_score.score < score) {
-      //   const high_score = await updateHighScore(score);
-      //   setHighScore(high_score.score);
-      // }
+      const prev_high_score = await getHighScore();
+      if (prev_high_score.score < score) {
+        const high_score = await updateHighScore(score);
+        setHighScore(high_score.score);
+      }
       setWinCount(0);
       setScore(0);
     }
@@ -211,8 +211,8 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      // const high_score = await getHighScore();
-      // setHighScore(high_score.score);
+      const high_score = await getHighScore();
+      setHighScore(high_score.score);
       const filtered = listBox.filter((val) => val.isClicked);
       if (filtered.length == 0) {
         setIsFinished(true);
@@ -289,10 +289,10 @@ export default function Home() {
               {" "}
               Total Score Kamu : {score}
             </h1>
-            {/* <h1 className="text-white text-3xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
+            <h1 className="text-white text-3xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
-              <b>High Score Kamu: {highScore}</b>
-            </h1> */}
+              <b>High Score Semua Orang: {highScore}</b>
+            </h1>
           </div>
         </div>
       )}
