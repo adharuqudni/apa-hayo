@@ -13,7 +13,15 @@ import classNames from "classnames";
 let ignore = false;
 let intervalTime;
 
-const listBoxGenerator = (maxBox, maximumTrue) => {
+const listBoxGenerator = (winCount) => {
+ 
+  const level = parseInt(winCount / 5)
+  const stack = level + 2
+  const maxBox = Math.pow(stack, 2);
+  const minimumTrue = 3
+  const maxTrue = maxBox - level - 3
+  const maximumTrue = (winCount % maxTrue) + minimumTrue;
+
   let isClickedArr = Array(maximumTrue).fill(true);
 
   for (let i = maximumTrue; i < maxBox; i++) {
@@ -96,20 +104,23 @@ export default function Home() {
   const [isFinished, setIsFinished] = useState(true);
   const [isTimeout, setIsTimeout] = useState(false);
   const [winCount, setWinCount] = useState(0);
-  const [listBox, setListBox] = useState([
-    ...listBoxGenerator((parseInt(winCount / 5) + 3) * 3, (winCount % 5) + 3),
-  ]);
+  const [gridClass, setGridClass] = useState(
+    "grid min-h-screen grid-cols-2 items-center gap-4 p-6"
+  );
+  const [listBox, setListBox] = useState([...listBoxGenerator(winCount)]);
 
   const progressionBarRef = useRef(null);
 
   const handleButtonModalClick = () => {
     if (isTimeout) {
+      setGridClass('grid min-h-screen grid-cols-2 items-center gap-4 p-6')
       setWinCount(0);
     } else {
+      setGridClass(`grid min-h-screen grid-cols-${parseInt(winCount / 5) + 2}`);
       setWinCount((prevValue) => prevValue + 1);
     }
 
-    setListBox([...listBoxGenerator((parseInt(winCount / 5) + 3) * 3, (winCount % 5) + 3)]);
+    setListBox([...listBoxGenerator(winCount)]);
     progressionBarRef.current.refreshPercent();
     setIsFinished(false);
     setIsTimeout(false);
@@ -143,7 +154,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="grid min-h-screen grid-cols-3 items-center gap-4 p-6">
+        <div className={gridClass}>
           {listBox.map((val) => {
             return (
               <Box
@@ -166,7 +177,9 @@ export default function Home() {
           >
             <h1 className="text-white text-3xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
-              {winCount == 0 ? "Selamat Datang di puzzle" : isTimeout
+              {winCount == 0
+                ? "Selamat Datang di puzzle"
+                : isTimeout
                 ? "Waduh waktu kamu habis ! "
                 : "Selamat kamu berhasil menyelesaikan puzzle !"}
             </h1>
@@ -179,7 +192,7 @@ export default function Home() {
                   : "border-red-100 bg-red-500 hover:bg-red-700")
               }
             >
-              {winCount == 0 ? "Mulai!": "Retry!"}
+              {winCount == 0 ? "Mulai!" : "Retry!"}
             </button>
             <h1 className="text-white text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-center ">
               {" "}
